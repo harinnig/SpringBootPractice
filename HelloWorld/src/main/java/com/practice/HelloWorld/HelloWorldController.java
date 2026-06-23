@@ -27,15 +27,29 @@ public class HelloWorldController {
         Password.add(password);
         return "* Registration Successful *";
     }
-    @GetMapping("register/{name}")
-    public String register(@PathVariable String name, @RequestBody HashMap<String,String> reg){
-        username = reg.get("username");
-        password = reg.get("password");
+    @PostMapping("register_error")
+    public String registrationError(@RequestBody HashMap<String,String> err){
+        username = err.get("username");
+        password = err.get("password");
+        if(User.contains(username) && Password.contains(password)) return "Already existed";
         User.add(username);
         Password.add(password);
-        return "Registration Successful by "+name;
+        return "* Registration Successful *";
     }
 
-
+    @PostMapping("login")
+    public String login(@RequestBody HashMap<String,String> log){
+        String name = log.get("username");
+        String pass = log.get("password");
+        if(User.contains(name) && Password.contains(pass) ) return "* Login successful *";
+        else
+            return "Check Your login credentials";
+    }
+    @GetMapping("user/{name}")
+    public String User(@PathVariable String name, @RequestBody HashMap<String,String> reg){
+        username = reg.get("username");
+        password = reg.get("password");
+        return "Registration Successful by "+name;
+    }
 }
 
