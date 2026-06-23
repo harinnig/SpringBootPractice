@@ -1,12 +1,16 @@
 package com.practice.HelloWorld;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/view/")
 public class HelloWorldController {
+    public String username;
+    public String password;
+    public ArrayList<String> User = new ArrayList<>();
+    public ArrayList<String> Password = new ArrayList<>();
 
     @GetMapping("display")
     public String display(){
@@ -14,5 +18,16 @@ public class HelloWorldController {
         System.out.print(str);
         return str;
     }
+
+    @PostMapping("register")
+    public String registration(@RequestBody HashMap<String,String> reg){
+        username = reg.get("username");
+        password = reg.get("password");
+        User.add(username);
+        Password.add(password);
+        return "* Registration Successful *";
+    }
+
+
 }
 
