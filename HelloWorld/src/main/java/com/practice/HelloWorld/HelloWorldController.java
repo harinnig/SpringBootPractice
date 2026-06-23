@@ -27,6 +27,14 @@ public class HelloWorldController {
         Password.add(password);
         return "* Registration Successful *";
     }
+    @GetMapping("register/{name}")
+    public String register(@PathVariable String name, @RequestBody HashMap<String,String> reg){
+        username = reg.get("username");
+        password = reg.get("password");
+        User.add(username);
+        Password.add(password);
+        return "Registration Successful by "+name;
+    }
 
 
 }
