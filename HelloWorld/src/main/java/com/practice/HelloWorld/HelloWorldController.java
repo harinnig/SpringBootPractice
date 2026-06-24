@@ -27,28 +27,22 @@ public class HelloWorldController {
 
     @PostMapping("register")
     public String registration(@RequestBody HashMap<String,String> reg){
-        name = reg.get("Name");
-        username = reg.get("username");
-        password = reg.get("password");
-        dob = reg.get("DOB");
-        Id += 1;
+
+        String name = reg.get("Name");
+        String username = reg.get("username");
+        String password = reg.get("password");
+        String dob = reg.get("DOB");
+        if(name == null || name.isBlank()) return "Please fill Name";
+        if(username == null || username.isBlank()) return "Please fill Username";
+        if(password == null || password.isBlank()) return "Please fill Password";
+        if(dob == null || dob.isBlank()) return "Please fill DOB";
+        if(User.contains(username)) return "Username already exists";
+        Id++;
         Name.add(name);
         User.add(username);
         Password.add(password);
-        ID.add(Id);
         DOB.add(dob);
-        return "* Registration Successful *";
-    }
-    @PostMapping("register_error")
-    public String registrationError(@RequestBody HashMap<String,String> err){
-        username = err.get("username");
-        password = err.get("password");
-        if(User.contains(username) && Password.contains(password)) return "Already existed";
-        name = err.get("Name");
-        username = err.get("username");
-        password = err.get("password");
-        dob = err.get("DOB");
-        Id += 1;
+        ID.add(Id);
         return "* Registration Successful *";
     }
 
@@ -56,9 +50,12 @@ public class HelloWorldController {
     public String login(@RequestBody HashMap<String,String> log){
         String Uname = log.get("username");
         String pass = log.get("password");
-        if(User.contains(Uname) && Password.contains(pass) ) return "* Login successful *";
-        else
-            return "Check Your login credentials";
+        int i = 0;
+        while(i < User.size()){
+            if(User.get(i).equals(Uname) && Password.get(i).equals(pass)) return "* Login successful *";
+            i++;
+        }
+        return "Check Your login credentials";
     }
     @GetMapping("users/{id}")
     public String Users(@PathVariable String id, @RequestBody HashMap<String,String> reg){
