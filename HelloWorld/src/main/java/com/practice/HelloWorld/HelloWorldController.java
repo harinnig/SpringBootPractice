@@ -1,22 +1,15 @@
 package com.practice.HelloWorld;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @RestController
 @RequestMapping("/view/")
 public class HelloWorldController {
-    public String name;
-    public String username;
-    public String password;
-    public String dob;
-    public int Id = 0;
-    public ArrayList<String> Name = new ArrayList<>();
-    public ArrayList<String> User = new ArrayList<>();
-    public ArrayList<String> Password = new ArrayList<>();
-    public ArrayList<Integer> ID = new ArrayList<>();
-    public ArrayList<String> DOB = new ArrayList<>();
+
+    @Autowired
+    private Userdata userdata;
 
     @GetMapping("display")
     public String display(){
@@ -28,21 +21,21 @@ public class HelloWorldController {
     @PostMapping("register")
     public String registration(@RequestBody HashMap<String,String> reg){
 
-        String name = reg.get("Name");
-        String username = reg.get("username");
-        String password = reg.get("password");
-        String dob = reg.get("DOB");
-        if(name == null || name.isBlank()) return "Please fill Name";
-        if(username == null || username.isBlank()) return "Please fill Username";
-        if(password == null || password.isBlank()) return "Please fill Password";
-        if(dob == null || dob.isBlank()) return "Please fill DOB";
-        if(User.contains(username)) return "Username already exists";
-        Id++;
-        Name.add(name);
-        User.add(username);
-        Password.add(password);
-        DOB.add(dob);
-        ID.add(Id);
+        userdata.name = reg.get("Name");
+        userdata.username = reg.get("username");
+        userdata.password = reg.get("password");
+        userdata.dob = reg.get("DOB");
+        if(userdata.name == null || userdata.name.isBlank()) return "Please fill Name";
+        if(userdata.username == null || userdata.username.isBlank()) return "Please fill Username";
+        if(userdata.password == null || userdata.password.isBlank()) return "Please fill Password";
+        if(userdata.dob == null || userdata.dob.isBlank()) return "Please fill DOB";
+        if(userdata.User.contains(userdata.username)) return "Username already exists";
+        userdata.Id++;
+        userdata.Name.add(reg.get("Name"));
+        userdata.User.add(reg.get("username"));
+        userdata.Password.add(reg.get("password"));
+        userdata.DOB.add(reg.get("DOB"));
+        userdata.ID.add(userdata.Id);
         return "* Registration Successful *";
     }
 
@@ -51,32 +44,33 @@ public class HelloWorldController {
         String Uname = log.get("username");
         String pass = log.get("password");
         int i = 0;
-        while(i < User.size()){
-            if(User.get(i).equals(Uname) && Password.get(i).equals(pass)) return "* Login successful *";
+        while(i < userdata.User.size()){
+            if(userdata.User.get(i).equals(Uname) && userdata.Password.get(i).equals(pass)) return "* Login successful *";
             i++;
         }
         return "Check Your login credentials";
     }
-    @GetMapping("users/{id}")
-    public String Users(@PathVariable String id, @RequestBody HashMap<String,String> reg){
-        username = reg.get("username");
-        password = reg.get("password");
-        return username+" "+id;
+    @GetMapping("users")
+    public String Users(@RequestBody HashMap<String,String> reg){
+        userdata.username = reg.get("username");
+        userdata.password = reg.get("password");
+        return userdata.username;
     }
 
     @PutMapping("usersupdate/{id}")
-    public String UsersUpdate(@PathVariable String id, @RequestBody HashMap<String,String> upd){
-        name = upd.get("Name");
-        username = upd.get("username");
-        password = upd.get("password");
-        dob = upd.get("DOB");
-        int index = User.indexOf(username);
+    public String UsersUpdate(@PathVariable Long id, @RequestBody HashMap<String,String> upd){
+        userdata.name = upd.get("Name");
+        userdata.username = upd.get("username");
+        userdata.password = upd.get("password");
+        userdata.dob = upd.get("DOB");
+        int index = userdata.User.indexOf(userdata.username);
         if(index == -1) return "User not found";
-        Name.set(index,name);
-        User.set(index,username);
-        Password.set(index,password);
-        DOB.set(index,dob);
-        return "Updated successfully by id"+ id;
+        userdata.Name.set(index, userdata.name);
+        userdata.User.set(index,userdata.username);
+        userdata.Password.set(index,userdata.password);
+        userdata.DOB.set(index,userdata.dob);
+        if(userdata.ID.contains((id))) return userdata.name;
+        return "User found ID is"+ id;
     }
 }
 
